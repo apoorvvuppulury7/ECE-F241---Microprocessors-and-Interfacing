@@ -1,0 +1,67 @@
+----------------------------------------------------------------------
+
+Q1) ALP to convert Celsius to Farhenheit, and then to Kelvin
+
+.model small
+.data
+    Deg_Cent dw 0023h     ; Input in Celsius 
+    Deg_Far  dw ?         ; Output in Fahrenheit
+    Deg_Kel  dw ?         ; Output in Kelvin
+
+.code
+.startup
+    mov ax, Deg_Cent      ; Load Celsius value
+    mov bx, 0009h
+    mul bx                ; AX = AL * 9
+
+    mov bx, 0005h
+    div bx                ; AL = (AL * 9) / 5
+
+    add ax, 0020h         ; Add 32 to result
+    mov Deg_Far, ax       ; Store in Deg_Far
+
+    mov ax, Deg_Cent      ; Load Celsius value
+    add ax, 0111h         ; AX = AX + 273
+    mov Deg_Kel, ax       ; Store in Deg_Kel
+  
+.exit
+end
+
+Input - Deg_Cent = 0023H
+Output - Deg_Far = 005EH
+       - Deg_Kel = 013EH
+Output can be seen at 0710:0000 address.
+
+----------------------------------------------------------------------
+
+Q2) ALP to find the factorial of a single digit number between 1 and 9
+
+.model small
+.data
+    num     dw 0007h      ; Input number (in hex, e.g., 02H = 2)
+    result  dw 0001h      ; Initialize result to 1
+
+.code
+.startup
+    mov ax, num  
+    dec ax                ; Start loop from num-1
+    mov cx, ax            ; CX = loop counter
+    mov ax, num           ; AX = current product
+
+factorial_loop:
+    mul cx                ; AX = AX * CX
+    loop factorial_loop   ; Decrement CX and repeat if not zero
+
+    mov result, ax        ; Store result
+
+end_factorial:
+
+.exit
+end
+
+Input can be seen at 0710:0000 address.
+Output can be seen at 0710:0002 address.
+
+----------------------------------------------------------------------
+
+Q3) ALP to find the sum of the first n natural numbers, where n is prompted by the user. 
